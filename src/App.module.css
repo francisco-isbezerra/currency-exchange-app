@@ -1,8 +1,15 @@
 .app { min-height: 100vh; display: flex; flex-direction: column; }
+.banner {
+  background: rgba(255, 179, 71, 0.12);
+  border-bottom: 1px solid rgba(255, 179, 71, 0.3);
+  color: #FFB347;
+  font-size: 0.8125rem;
+  padding: var(--space-3) var(--space-6);
+  text-align: center;
+}
 .main { flex: 1; }
 .loadingScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh; gap: var(--space-4); }
 .loadingText { color: var(--color-text-muted); font-size: 0.875rem; }
-.errorScreen { display: flex; align-items: center; justify-content: center; min-height: 60vh; color: var(--color-danger); }
 .footer { border-top: 1px solid var(--color-border); padding: var(--space-6); text-align: center; font-size: 0.8125rem; color: var(--color-text-dim); }
 .footer a { color: var(--color-accent); text-decoration: none; }
 .footer a:hover { text-decoration: underline; }

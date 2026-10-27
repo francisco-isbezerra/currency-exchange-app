@@ -9,24 +9,25 @@ import styles from './App.module.css';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('converter');
-  const { currencies, loading, error } = useCurrencies();
+  const { currencies, loading, usingFallback } = useCurrencies();
 
   return (
     <div className={styles.app}>
       <Header activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {usingFallback && (
+        <div className={styles.banner} role="alert">
+          ⚠️ API temporariamente indisponível — usando lista de moedas local. As cotações ainda serão buscadas ao vivo.
+        </div>
+      )}
+
       <main className={styles.main} role="main">
-        {loading && (
+        {loading ? (
           <div className={styles.loadingScreen}>
             <Spinner size={40} label="Carregando moedas..." />
-            <p className={styles.loadingText}>Conectando à API...</p>
+            <p className={styles.loadingText}>Conectando à Frankfurter API...</p>
           </div>
-        )}
-        {error && (
-          <div className={styles.errorScreen}>
-            <p>❌ Erro ao carregar dados: {error}</p>
-          </div>
-        )}
-        {!loading && !error && (
+        ) : (
           <>
             {activeTab === 'converter' && <Converter currencies={currencies} />}
             {activeTab === 'chart'     && <RateChart currencies={currencies} />}
@@ -34,6 +35,7 @@ export default function App() {
           </>
         )}
       </main>
+
       <footer className={styles.footer}>
         <p>Hermes © 2024 · Dados: <a href="https://www.frankfurter.app" target="_blank" rel="noreferrer">Frankfurter API</a></p>
       </footer>

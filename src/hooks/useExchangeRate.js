@@ -2,19 +2,15 @@ import { useState, useEffect, useCallback } from 'react';
 import { getLatestRate } from '../services/frankfurter';
 
 /**
- * Hook customizado para buscar a cotação ao vivo de um par de moedas.
+ * Hook para buscar cotação ao vivo de um par de moedas.
  */
 export function useExchangeRate(from, to, amount) {
-  const [result, setResult] = useState(null);
+  const [result, setResult]   = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError]     = useState(null);
 
   const fetchRate = useCallback(async () => {
     if (!from || !to) return;
-    if (from === to) {
-      setResult({ rates: { [to]: Number(amount) || 1 }, date: new Date().toISOString().slice(0,10) });
-      return;
-    }
 
     setLoading(true);
     setError(null);
@@ -29,9 +25,7 @@ export function useExchangeRate(from, to, amount) {
     }
   }, [from, to, amount]);
 
-  useEffect(() => {
-    fetchRate();
-  }, [fetchRate]);
+  useEffect(() => { fetchRate(); }, [fetchRate]);
 
   return { result, loading, error, refetch: fetchRate };
 }
