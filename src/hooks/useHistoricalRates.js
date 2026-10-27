@@ -18,7 +18,8 @@ function getStartDate(range) {
 }
 
 /**
- * Hook para buscar histórico de cotações (usado no gráfico e na tabela).
+ * Hook para buscar histórico de cotações (API v2).
+ * Retorna array [{date, rate}, ...] para gráfico e tabela.
  */
 export function useHistoricalRates(from, to, range = '30d') {
   const [data, setData]       = useState([]);
@@ -39,7 +40,8 @@ export function useHistoricalRates(from, to, range = '30d') {
 
         if (!cancelled && res.rates) {
           const rows = Object.entries(res.rates)
-            .map(([date, rates]) => ({ date, rate: rates[to] }))
+            .map(([date, rates]) => ({ date, rate: rates[to.toUpperCase()] }))
+            .filter(r => r.rate != null)
             .sort((a, b) => a.date.localeCompare(b.date));
           setData(rows);
         }

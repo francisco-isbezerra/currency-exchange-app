@@ -3,8 +3,8 @@ import { getCurrencies } from '../services/frankfurter';
 import { FALLBACK_CURRENCIES } from '../data/currencies';
 
 /**
- * Hook para buscar a lista de moedas da API.
- * Se a API falhar, usa a lista local como fallback — o app nunca trava.
+ * Hook para buscar a lista de moedas.
+ * Se a API v2 falhar, usa lista local — o app nunca trava.
  */
 export function useCurrencies() {
   const [currencies, setCurrencies] = useState(FALLBACK_CURRENCIES);
@@ -14,7 +14,7 @@ export function useCurrencies() {
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchCurrencies() {
+    async function load() {
       try {
         const data = await getCurrencies();
         if (!cancelled) {
@@ -22,9 +22,8 @@ export function useCurrencies() {
           setUsingFallback(false);
         }
       } catch (err) {
-        // API inacessível → usa fallback, app continua funcionando
+        console.warn('[Hermes] API v2 de moedas indisponível, usando lista local.', err.message);
         if (!cancelled) {
-          console.warn('[Hermes] API de moedas indisponível, usando lista local.', err.message);
           setCurrencies(FALLBACK_CURRENCIES);
           setUsingFallback(true);
         }
@@ -33,7 +32,7 @@ export function useCurrencies() {
       }
     }
 
-    fetchCurrencies();
+    load();
     return () => { cancelled = true; };
   }, []);
 

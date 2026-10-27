@@ -13,10 +13,11 @@ export default function Converter({ currencies }) {
   const [inputError, setInputError] = useState('');
 
   const numAmount = parseFloat(amount);
-  const { result, loading, error, refetch } = useExchangeRate(from, to, isNaN(numAmount) || numAmount <= 0 ? 1 : numAmount);
+  const validAmount = isNaN(numAmount) || numAmount <= 0 ? 1 : numAmount;
+  const { result, loading, error, refetch } = useExchangeRate(from, to, validAmount);
 
   const converted = result?.rates?.[to];
-  const rate = converted != null && numAmount > 0 ? converted / numAmount : null;
+  const unitRate  = result?.rawRate ?? (converted != null && validAmount > 0 ? converted / validAmount : null);
 
   function handleAmountChange(e) {
     const val = e.target.value;
@@ -77,7 +78,7 @@ export default function Converter({ currencies }) {
           {!loading && !error && result && !inputError && (
             <div className={styles.resultInner} aria-live="polite">
               <span className={styles.fromAmount}>
-                {(isNaN(numAmount) ? 1 : numAmount).toLocaleString('pt-BR')} {from}
+                {validAmount.toLocaleString('pt-BR')} {from}
               </span>
               <span className={styles.equals}>=</span>
               <span className={styles.toAmount}>
@@ -85,8 +86,8 @@ export default function Converter({ currencies }) {
                   ? converted.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })
                   : '—'} {to}
               </span>
-              {rate != null && (
-                <span className={styles.rate}>1 {from} = {formatRate(rate)} {to}</span>
+              {unitRate != null && (
+                <span className={styles.rate}>1 {from} = {formatRate(unitRate)} {to}</span>
               )}
               {result.date && (
                 <span className={styles.updated}>Cotação de: {result.date}</span>

@@ -1,90 +1,115 @@
 // ═══════════════════════════════════════════════════════════
-// Frankfurter API Service
-// Docs: https://www.frankfurter.app/docs/
+// Frankfurter API v2 — https://frankfurter.dev/
+// Base: https://api.frankfurter.dev/v2
+// Sem necessidade de API key.
 // ═══════════════════════════════════════════════════════════
 
-const BASE_URL = 'https://api.frankfurter.app';
-const TIMEOUT_MS = 10000;
+const BASE_URL = 'https://api.frankfurter.dev/v2';
+const TIMEOUT_MS = 12000;
 
 /**
- * Fetch com timeout — evita que o app trave indefinidamente.
- * Tenta chamada direta primeiro. Se falhar (CORS/rede), tenta via proxy.
+ * Fetch com timeout e tratamento de erros HTTP.
  */
-async function fetchWithTimeout(url, timeoutMs = TIMEOUT_MS) {
+async function apiFetch(url) {
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
   try {
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    if (!res.ok) {
+      let msg = `HTTP ${res.status}`;
+      try {
+        const body = await res.json();
+        if (body.message) msg = body.message;
+      } catch (_) { /* body não é JSON */ }
+      throw new Error(msg);
+    }
     return res.json();
   } catch (err) {
     clearTimeout(timer);
-    if (err.name === 'AbortError') {
-      throw new Error('Tempo limite excedido');
-    }
+    if (err.name === 'AbortError') throw new Error('Tempo limite excedido (timeout)');
     throw err;
   }
 }
 
-/**
- * Tenta buscar da API diretamente. Se falhar, tenta com proxy CORS.
- * Isso garante que funcione em GitHub Pages e ambientes com restrição.
- */
-async function resilientFetch(endpoint) {
-  const directUrl = `${BASE_URL}${endpoint}`;
-
-  try {
-    // Tentativa 1: chamada direta (funciona na maioria dos browsers)
-    return await fetchWithTimeout(directUrl);
-  } catch (directErr) {
-    console.warn('[Hermes] Chamada direta falhou, tentando proxy CORS...', directErr.message);
-
-    try {
-      // Tentativa 2: via CORS proxy público
-      const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(directUrl)}`;
-      return await fetchWithTimeout(proxyUrl);
-    } catch (proxyErr) {
-      console.warn('[Hermes] Proxy CORS também falhou:', proxyErr.message);
-
-      try {
-        // Tentativa 3: outro proxy
-        const proxy2Url = `https://api.allorigins.win/raw?url=${encodeURIComponent(directUrl)}`;
-        return await fetchWithTimeout(proxy2Url);
-      } catch (proxy2Err) {
-        // Todas as tentativas falharam
-        throw new Error(`API indisponível: ${directErr.message}`);
-      }
-    }
-  }
-}
+// ─── Moedas ───────────────────────────────────────────────────────────────
 
 /**
  * Busca a lista de moedas disponíveis.
+ * API v2 retorna: [{iso_code, name, symbol, ...}, ...]
+ * Convertemos para o formato { CODE: "Name" } usado pelo app.
  */
 export async function getCurrencies() {
-  return resilientFetch('/currencies');
+  const data = await apiFetch(`${BASE_URL}/currencies`);
+  // Transforma array em objeto { "USD": "United States Dollar", ... }
+  const map = {};
+  for (const c of data) {
+    map[c.iso_code] = c.name;
+  }
+  return map;
 }
 
+// ─── Cotação única ────────────────────────────────────────────────────────
+
 /**
- * Busca a taxa de câmbio mais recente.
+ * Busca a cotação mais recente de um par de moedas.
+ * API v2: GET /v2/rate/{base}/{quote}
+ * Retorna: { date, base, quote, rate }
+ *
+ * Adaptamos para o formato usado pelo Converter:
+ * { rates: { TO: value }, date, base }
  */
 export async function getLatestRate(from, to, amount = 1) {
   if (from === to) {
     return {
-      amount,
-      base: from,
-      date: new Date().toISOString().slice(0, 10),
       rates: { [to]: Number(amount) },
+      date: new Date().toISOString().slice(0, 10),
+      base: from,
     };
   }
-  return resilientFetch(`/latest?amount=${amount}&from=${from}&to=${to}`);
+
+  const data = await apiFetch(
+    `${BASE_URL}/rate/${from.toLowerCase()}/${to.toLowerCase()}`
+  );
+
+  // data = { date: "2026-10-27", base: "USD", quote: "EUR", rate: 0.89385 }
+  return {
+    rates: { [to.toUpperCase()]: data.rate * Number(amount) },
+    date: data.date,
+    base: data.base,
+    rawRate: data.rate,
+  };
 }
+
+// ─── Histórico (time series) ──────────────────────────────────────────────
 
 /**
  * Busca histórico de cotações entre duas datas.
+ * API v2: GET /v2/rates?base={from}&quotes={to}&from={start}&to={end}
+ * Retorna: [{date, base, quote, rate}, ...]
+ *
+ * Adaptamos para o formato usado pelo Chart e Table:
+ * [{date, rate}, ...]
  */
 export async function getHistoricalRates(from, to, startDate, endDate) {
-  return resilientFetch(`/${startDate}..${endDate}?from=${from}&to=${to}`);
+  const data = await apiFetch(
+    `${BASE_URL}/rates?base=${from.toLowerCase()}&quotes=${to.toLowerCase()}&from=${startDate}&to=${endDate}`
+  );
+
+  // data = [{date, base, quote, rate}, ...]
+  // Já vem como array, mas pode vir com estrutura legada se v1 de volta.
+  // Garantimos que funcione com ambos os formatos:
+  if (Array.isArray(data)) {
+    return {
+      rates: data.reduce((acc, item) => {
+        acc[item.date] = { [to.toUpperCase()]: item.rate };
+        return acc;
+      }, {}),
+    };
+  }
+
+  // Fallback para formato v1 (caso improvável)
+  return data;
 }

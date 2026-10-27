@@ -1,16 +1,20 @@
 /**
- * Lista de moedas suportadas pela Frankfurter API.
- * Usada como fallback caso a API esteja inacessível.
- * Fonte: https://api.frankfurter.app/currencies
+ * Lista de moedas mais comuns, usada como fallback quando a API v2 está inacessível.
+ * Formato: { CODE: "Name" } — o mesmo formato que getCurrencies() retorna.
  */
 export const FALLBACK_CURRENCIES = {
+  AED: "United Arab Emirates Dirham",
+  ARS: "Argentine Peso",
   AUD: "Australian Dollar",
   BRL: "Brazilian Real",
   CAD: "Canadian Dollar",
   CHF: "Swiss Franc",
+  CLP: "Chilean Peso",
   CNY: "Chinese Renminbi Yuan",
+  COP: "Colombian Peso",
   CZK: "Czech Koruna",
   DKK: "Danish Krone",
+  EGP: "Egyptian Pound",
   EUR: "Euro",
   GBP: "British Pound",
   HKD: "Hong Kong Dollar",
@@ -25,13 +29,19 @@ export const FALLBACK_CURRENCIES = {
   MYR: "Malaysian Ringgit",
   NOK: "Norwegian Krone",
   NZD: "New Zealand Dollar",
+  PEN: "Peruvian Sol",
   PHP: "Philippine Peso",
   PLN: "Polish Złoty",
   RON: "Romanian Leu",
+  RUB: "Russian Ruble",
+  SAR: "Saudi Riyal",
   SEK: "Swedish Krona",
   SGD: "Singapore Dollar",
   THB: "Thai Baht",
   TRY: "Turkish Lira",
+  TWD: "New Taiwan Dollar",
+  UAH: "Ukrainian Hryvnia",
   USD: "United States Dollar",
+  UYU: "Uruguayan Peso",
   ZAR: "South African Rand",
 };

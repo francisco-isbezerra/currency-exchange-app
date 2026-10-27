@@ -37,7 +37,7 @@ export default function App() {
       </main>
 
       <footer className={styles.footer}>
-        <p>Hermes © 2024 · Dados: <a href="https://www.frankfurter.app" target="_blank" rel="noreferrer">Frankfurter API</a></p>
+        <p>Hermes © 2024 · Dados: <a href="https://frankfurter.dev" target="_blank" rel="noreferrer">Frankfurter API</a></p>
       </footer>
     </div>
   );

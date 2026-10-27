@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getLatestRate } from '../services/frankfurter';
 
 /**
- * Hook para buscar cotação ao vivo de um par de moedas.
+ * Hook para buscar cotação ao vivo de um par de moedas (API v2).
  */
 export function useExchangeRate(from, to, amount) {
   const [result, setResult]   = useState(null);
