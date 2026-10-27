@@ -1,0 +1,22 @@
+.section { padding: var(--space-8) var(--space-6); max-width: 1100px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+.card { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-8); box-shadow: var(--shadow-lg); }
+.cardHeader { margin-bottom: var(--space-6); }
+.title { font-size: 1.25rem; font-weight: 600; color: var(--color-text); }
+.controls { display: flex; gap: var(--space-6); align-items: flex-end; flex-wrap: wrap; margin-bottom: var(--space-6); }
+.selects { display: flex; gap: var(--space-4); flex: 1; min-width: 280px; }
+.ranges { display: flex; gap: var(--space-1); flex-wrap: wrap; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-1); }
+.rangeBtn { background: none; border: none; color: var(--color-text-muted); font-family: var(--font-sans); font-size: 0.8125rem; font-weight: 500; padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); cursor: pointer; transition: all var(--transition-fast); }
+.rangeBtn:hover { color: var(--color-text); background: var(--color-surface); }
+.rangeBtn.active { color: var(--color-ink); background: var(--color-accent); }
+.stats { display: flex; gap: var(--space-4); margin-bottom: var(--space-6); }
+.stat { flex: 1; background: var(--color-surface-2); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4); text-align: center; }
+.statLabel { display: block; font-size: 0.75rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: var(--space-2); }
+.statValue { font-size: 1.25rem; font-weight: 600; color: var(--color-text); }
+.statMin { color: var(--color-danger); }
+.statMax { color: var(--color-accent); }
+.chartWrap { background: var(--color-surface-2); border-radius: var(--radius-lg); padding: var(--space-4); border: 1px solid var(--color-border); }
+.tooltip { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: var(--space-3) var(--space-4); box-shadow: var(--shadow-md); }
+.tooltipDate { font-size: 0.75rem; color: var(--color-text-muted); margin-bottom: var(--space-1); }
+.tooltipRate { font-size: 1rem; font-weight: 600; color: var(--color-accent); }
+.error { color: var(--color-danger); font-size: 0.875rem; padding: var(--space-4); text-align: center; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
