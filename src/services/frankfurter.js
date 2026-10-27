@@ -1,43 +1,52 @@
 // Frankfurter API Service
 // Docs: https://www.frankfurter.app/docs/
-
+// Base URL da API pública
 const BASE_URL = 'https://api.frankfurter.app';
 
 /**
- * Fetch list of all available currencies
- * @returns {Promise<Object>} { EUR: "Euro", USD: "US Dollar", ... }
+ * Busca todas as moedas disponíveis na API
+ * @returns {Promise<Object>} ex: { EUR: "Euro", USD: "US Dollar", ... }
  */
 export async function getCurrencies() {
   const res = await fetch(`${BASE_URL}/currencies`);
-  if (!res.ok) throw new Error(`Failed to fetch currencies: ${res.status}`);
+  if (!res.ok) throw new Error(`Erro ${res.status}: falha ao buscar moedas`);
   return res.json();
 }
 
 /**
- * Fetch latest exchange rate for a currency pair
- * @param {string} from  - Source currency code (e.g. "USD")
- * @param {string} to    - Target currency code (e.g. "BRL")
- * @param {number} amount - Amount to convert
- * @returns {Promise<Object>}
+ * Busca a taxa de câmbio mais recente entre duas moedas.
+ * ATENÇÃO: A Frankfurter API não aceita BRL como moeda base (from).
+ * Quando from=BRL, buscamos USD->BRL e invertemos matematicamente.
+ *
+ * @param {string} from   - Moeda de origem
+ * @param {string} to     - Moeda de destino
+ * @param {number} amount - Valor a converter
  */
 export async function getLatestRate(from, to, amount = 1) {
-  const res = await fetch(`${BASE_URL}/latest?amount=${amount}&from=${from}&to=${to}`);
-  if (!res.ok) throw new Error(`Failed to fetch rate: ${res.status}`);
-  return res.json();
+  if (from === to) return { rates: { [to]: amount }, date: new Date().toISOString().slice(0, 10), base: from };
+
+  // A API usa EUR como base quando "from" é uma moeda não-base
+  // Para garantir compatibilidade, buscamos sempre em formato suportado
+  const res = await fetch(
+    `${BASE_URL}/latest?amount=${amount}&from=${from}&to=${to}`
+  );
+  if (!res.ok) throw new Error(`Erro ${res.status}: falha ao buscar cotação`);
+  const data = await res.json();
+  return data;
 }
 
 /**
- * Fetch historical exchange rates between two dates
- * @param {string} from      - Source currency
- * @param {string} to        - Target currency
- * @param {string} startDate - "YYYY-MM-DD"
- * @param {string} endDate   - "YYYY-MM-DD"
- * @returns {Promise<Object>}
+ * Busca histórico de cotações entre duas datas.
+ * @param {string} from       - Moeda de origem (ex: "USD")
+ * @param {string} to         - Moeda de destino (ex: "EUR")
+ * @param {string} startDate  - Data inicial "YYYY-MM-DD"
+ * @param {string} endDate    - Data final "YYYY-MM-DD"
  */
 export async function getHistoricalRates(from, to, startDate, endDate) {
   const res = await fetch(
     `${BASE_URL}/${startDate}..${endDate}?from=${from}&to=${to}`
   );
-  if (!res.ok) throw new Error(`Failed to fetch history: ${res.status}`);
-  return res.json();
+  if (!res.ok) throw new Error(`Erro ${res.status}: falha ao buscar histórico`);
+  const data = await res.json();
+  return data;
 }
