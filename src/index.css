@@ -1,99 +1,57 @@
-/* ═══════════════════════════════════════
-   Hermes — Global Design System
-   ═══════════════════════════════════════ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  /* Colors */
-  --color-bg:           #0F1E1A;
-  --color-surface:      #1A2E28;
-  --color-surface-2:    #1E3530;
-  --color-border:       #2A4A42;
-  --color-border-light: #3A6056;
-  --color-text:         #E8F5F0;
-  --color-text-muted:   #8AADA4;
-  --color-text-dim:     #5A7A72;
-  --color-accent:       #25D195;
-  --color-accent-dim:   #1A9E6E;
-  --color-accent-glow:  rgba(37, 209, 149, 0.15);
-  --color-danger:       #FF6B6B;
-  --color-warning:      #FFB347;
-  --color-forest:       #175F49;
-  --color-ink:          #172A24;
+/* Paleta "papel e tinta": tons quentes, sem gradientes. Valores em R G B. */
+@layer base {
+  :root {
+    --paper: 244 241 234;
+    --surface: 252 250 246;
+    --ink: 28 27 25;
+    --muted: 110 104 95;
+    --rule: 217 211 199;
+    --accent: 196 84 42;   /* terracota */
+    --up: 31 122 77;
+    --down: 178 52 52;
+    color-scheme: light;
+  }
 
-  /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  .dark {
+    --paper: 23 22 20;
+    --surface: 32 31 28;
+    --ink: 236 231 220;
+    --muted: 160 153 142;
+    --rule: 58 55 50;
+    --accent: 232 133 92;
+    --up: 110 196 148;
+    --down: 236 120 120;
+    color-scheme: dark;
+  }
 
-  /* Spacing */
-  --space-1:  4px;
-  --space-2:  8px;
-  --space-3:  12px;
-  --space-4:  16px;
-  --space-5:  20px;
-  --space-6:  24px;
-  --space-8:  32px;
-  --space-10: 40px;
-  --space-12: 48px;
-  --space-16: 64px;
+  body {
+    @apply bg-paper font-sans text-ink antialiased transition-colors duration-200;
+  }
 
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.4);
-  --shadow-md:  0 4px 16px rgba(0,0,0,0.5);
-  --shadow-lg:  0 8px 32px rgba(0,0,0,0.6);
-  --shadow-accent: 0 0 20px rgba(37, 209, 149, 0.2);
-
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 250ms ease;
-  --transition-slow: 400ms ease;
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }
 
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@layer components {
+  .field {
+    @apply w-full rounded-none border border-rule bg-surface px-3 py-2.5 text-ink outline-none
+      transition focus:border-ink focus:ring-0 disabled:opacity-50;
+  }
+  .label {
+    @apply mb-1.5 block text-[11px] font-medium uppercase tracking-[0.14em] text-muted;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 border border-ink px-4 py-2 text-sm font-medium
+      transition hover:bg-ink hover:text-paper disabled:cursor-not-allowed disabled:opacity-40;
+  }
+  .panel {
+    @apply border border-rule bg-surface p-5 md:p-7;
+  }
 }
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  line-height: 1.6;
-  min-height: 100vh;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--color-surface); }
-::-webkit-scrollbar-thumb { background: var(--color-border-light); border-radius: var(--radius-full); }
-::-webkit-scrollbar-thumb:hover { background: var(--color-accent-dim); }
-
-/* Utility */
-.sr-only {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
-@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.5; } }

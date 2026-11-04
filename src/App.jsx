@@ -1,44 +1,50 @@
 import { useState } from 'react';
-import Header from './components/Header/Header';
-import Converter from './components/Converter/Converter';
+import Sidebar from './components/Layout/Sidebar';
+import MarketPage from './components/Market/MarketPage';
 import RateChart from './components/Chart/RateChart';
 import RateTable from './components/Table/RateTable';
 import Spinner from './components/Spinner/Spinner';
 import { useCurrencies } from './hooks/useCurrencies';
-import styles from './App.module.css';
+import { useI18n } from './i18n/I18nContext';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('converter');
+  const { t } = useI18n();
+  const [active, setActive] = useState('market');
   const { currencies, loading, usingFallback } = useCurrencies();
 
   return (
-    <div className={styles.app}>
-      <Header activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className="min-h-screen">
+      <Sidebar active={active} onChange={setActive} />
 
-      {usingFallback && (
-        <div className={styles.banner} role="alert">
-          ⚠️ API temporariamente indisponível — usando lista de moedas local. As cotações ainda serão buscadas ao vivo.
-        </div>
-      )}
-
-      <main className={styles.main} role="main">
-        {loading ? (
-          <div className={styles.loadingScreen}>
-            <Spinner size={40} label="Carregando moedas..." />
-            <p className={styles.loadingText}>Conectando à Frankfurter API...</p>
+      <div className="md:ms-64">
+        {usingFallback && (
+          <div role="alert" className="border-b border-rule bg-accent/10 px-6 py-2 text-sm text-ink">
+            {t('common.fallback')}
           </div>
-        ) : (
-          <>
-            {activeTab === 'converter' && <Converter currencies={currencies} />}
-            {activeTab === 'chart'     && <RateChart currencies={currencies} />}
-            {activeTab === 'table'     && <RateTable currencies={currencies} />}
-          </>
         )}
-      </main>
 
-      <footer className={styles.footer}>
-        <p>Hermes © 2024 · Dados: <a href="https://frankfurter.dev" target="_blank" rel="noreferrer">Frankfurter API</a></p>
-      </footer>
+        <main className="mx-auto max-w-6xl px-5 py-8 md:px-10 md:py-12">
+          {loading ? (
+            <Spinner />
+          ) : (
+            <>
+              {active === 'market'  && <MarketPage currencies={currencies} />}
+              {active === 'history' && <RateChart currencies={currencies} />}
+              {active === 'table'   && <RateTable currencies={currencies} />}
+            </>
+          )}
+        </main>
+
+        <footer className="mx-auto flex max-w-6xl flex-wrap justify-between gap-2 border-t border-rule px-5 py-6 font-mono text-xs text-muted md:px-10">
+          <span>Troca © {new Date().getFullYear()} · Francisco Bezerra</span>
+          <span>
+            {t('footer.data')}:{' '}
+            <a href="https://frankfurter.dev" target="_blank" rel="noreferrer" className="underline decoration-rule underline-offset-4 hover:text-ink">
+              Frankfurter API
+            </a>
+          </span>
+        </footer>
+      </div>
     </div>
   );
 }
