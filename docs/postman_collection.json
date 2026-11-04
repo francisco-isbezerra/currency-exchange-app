@@ -1,0 +1,62 @@
+{
+  "info": {
+    "_postman_id": "d9c8b7e1-9f4a-4b3c-8b5d-6f2e1a3c9b7a",
+    "name": "Hermes Currency Exchange API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection of API endpoints used by the Hermes Currency Exchange SPA. All requests are public and do not require authentication."
+  },
+  "item": [
+    {
+      "name": "Get Currencies",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.frankfurter.app/currencies",
+          "protocol": "https",
+          "host": ["api", "frankfurter", "app"],
+          "path": ["currencies"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Latest Rates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.frankfurter.app/latest?amount={{amount}}&from={{from}}&to={{to}}",
+          "protocol": "https",
+          "host": ["api", "frankfurter", "app"],
+          "path": ["latest"],
+          "query": [
+            { "key": "amount", "value": "1" },
+            { "key": "from", "value": "USD" },
+            { "key": "to", "value": "EUR" }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Historical Rates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://api.frankfurter.app/{{start}}..{{end}}?from={{from}}&to={{to}}",
+          "protocol": "https",
+          "host": ["api", "frankfurter", "app"],
+          "path": ["{{start}}..{{end}}"],
+          "query": [
+            { "key": "from", "value": "USD" },
+            { "key": "to", "value": "EUR" }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
+

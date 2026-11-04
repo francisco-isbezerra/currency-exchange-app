@@ -1,23 +1,7 @@
-# FIGMA.md
+# Figma Prototypes
 
-## Design System — "Hermes / Financial Clarity"
+The design prototypes for the **Hermes — Currency Exchange App** are hosted on Figma. You can explore the UI/UX layouts, component designs, and interaction flows:
 
-### Colors
-| Token | Value |
-|-------|-------|
-| Background | #0F1E1A |
-| Surface | #1A2E28 |
-| Accent | #25D195 |
-| Forest Green | #175F49 |
-| Dark Ink | #172A24 |
-| Text | #E8F5F0 |
-| Muted | #8AADA4 |
+- **Figma file:** https://www.figma.com/design/iKfckirErKSlaFr2536Dvy/Sem-t%C3%ADtulo?node-id=0-1&t=i4k33X5VOLj2HAze-1
 
-### Typography
-- Font: Inter (Google Fonts)
-- Weights: 300, 400, 500, 600, 700
-
-### Components
-- Cards with rounded corners (radius: 16-24px)
-- Glassmorphism header (backdrop-filter: blur)
-- Pill-shaped navigation tabs
+Feel free to open the link, duplicate the file to your own Figma account, and inspect the individual frames and components used in the application.
