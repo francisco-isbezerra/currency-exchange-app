@@ -2,15 +2,24 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/currency-exchange-app/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Hermes — Real-time currency exchange rates and historical charts" />
+    <meta name="description" content="Troca — conversor de moedas com cotações ao vivo, histórico e tabela de dados." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <title>Hermes — Currency Exchange</title>
-    <script type="module" crossorigin src="/currency-exchange-app/assets/index-B8Wg6mMA.js"></script>
-    <link rel="stylesheet" crossorigin href="/currency-exchange-app/assets/index-Doc0fzQc.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+    <title>Troca — câmbio sem complicação</title>
+    <script>
+      // Aplica o tema salvo antes do React carregar (evita "piscar" claro→escuro)
+      try {
+        var t = localStorage.getItem('troca.theme');
+        if (t === 'dark' || (!t && matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {}
+    </script>
+    <script type="module" crossorigin src="/currency-exchange-app/assets/index-C2qNv3Bc.js"></script>
+    <link rel="stylesheet" crossorigin href="/currency-exchange-app/assets/index-COl4wm51.css">
   </head>
   <body>
     <div id="root"></div>
