@@ -52,3 +52,4 @@ export function useI18n() {
   if (!ctx) throw new Error('useI18n deve ser usado dentro de <I18nProvider>');
   return ctx;
 }
+

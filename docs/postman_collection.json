@@ -6,11 +6,26 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "https://api.frankfurter.dev/v2" },
-    { "key": "base", "value": "usd" },
-    { "key": "quote", "value": "brl" },
-    { "key": "startDate", "value": "2026-10-01" },
-    { "key": "endDate", "value": "2026-10-31" }
+    {
+      "key": "baseUrl",
+      "value": "https://api.frankfurter.dev/v2"
+    },
+    {
+      "key": "base",
+      "value": "usd"
+    },
+    {
+      "key": "quote",
+      "value": "brl"
+    },
+    {
+      "key": "startDate",
+      "value": "2026-10-01"
+    },
+    {
+      "key": "endDate",
+      "value": "2026-10-31"
+    }
   ],
   "item": [
     {
@@ -37,8 +52,12 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/currencies",
-          "host": ["{{baseUrl}}"],
-          "path": ["currencies"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "currencies"
+          ]
         },
         "description": "Usado em useCurrencies() para preencher os seletores de moeda."
       },
@@ -67,8 +86,14 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/rate/{{base}}/{{quote}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["rate", "{{base}}", "{{quote}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rate",
+            "{{base}}",
+            "{{quote}}"
+          ]
         },
         "description": "Usado em getLatestRate() pelo Conversor."
       },
@@ -95,13 +120,29 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/rates?base={{base}}&quotes={{quote}}&from={{startDate}}&to={{endDate}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["rates"],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rates"
+          ],
           "query": [
-            { "key": "base", "value": "{{base}}" },
-            { "key": "quotes", "value": "{{quote}}" },
-            { "key": "from", "value": "{{startDate}}" },
-            { "key": "to", "value": "{{endDate}}" }
+            {
+              "key": "base",
+              "value": "{{base}}"
+            },
+            {
+              "key": "quotes",
+              "value": "{{quote}}"
+            },
+            {
+              "key": "from",
+              "value": "{{startDate}}"
+            },
+            {
+              "key": "to",
+              "value": "{{endDate}}"
+            }
           ]
         },
         "description": "Usado em getHistoricalRates() pelo Gráfico, pela Tabela e pelos cards do Mercado."
@@ -127,9 +168,18 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/rates?base={{base}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["rates"],
-          "query": [{ "key": "base", "value": "{{base}}" }]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rates"
+          ],
+          "query": [
+            {
+              "key": "base",
+              "value": "{{base}}"
+            }
+          ]
         }
       },
       "response": []
@@ -153,8 +203,14 @@
         "header": [],
         "url": {
           "raw": "{{baseUrl}}/rate/abc/{{quote}}",
-          "host": ["{{baseUrl}}"],
-          "path": ["rate", "abc", "{{quote}}"]
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rate",
+            "abc",
+            "{{quote}}"
+          ]
         },
         "description": "Valida o tratamento de erro que o app exibe ao usuário (apiFetch)."
       },

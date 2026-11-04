@@ -32,3 +32,4 @@ export function useTheme() {
   if (!ctx) throw new Error('useTheme deve ser usado dentro de <ThemeProvider>');
   return ctx;
 }
+

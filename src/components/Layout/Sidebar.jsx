@@ -104,3 +104,4 @@ export default function Sidebar({ active, onChange }) {
     </aside>
   );
 }
+

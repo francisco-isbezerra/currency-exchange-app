@@ -334,3 +334,4 @@ export const translations = {
     'range.6m': '6ش', 'range.1y': '1س', 'range.5y': '5س', 'range.10y': '10س',
   },
 };
+

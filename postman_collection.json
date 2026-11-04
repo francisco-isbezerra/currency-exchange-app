@@ -1,0 +1,220 @@
+{
+  "info": {
+    "_postman_id": "6b1f3c2e-7a4d-4e8b-9c51-2f0d8e6a4b17",
+    "name": "Troca — Frankfurter API v2",
+    "description": "Endpoints da Frankfurter API v2 consumidos pelo app Troca (https://francisco-isbezerra.github.io/currency-exchange-app/).\nAPI pública, sem autenticação. Cada requisição tem testes automáticos (aba Tests).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.frankfurter.dev/v2"
+    },
+    {
+      "key": "base",
+      "value": "usd"
+    },
+    {
+      "key": "quote",
+      "value": "brl"
+    },
+    {
+      "key": "startDate",
+      "value": "2026-10-01"
+    },
+    {
+      "key": "endDate",
+      "value": "2026-10-31"
+    }
+  ],
+  "item": [
+    {
+      "name": "Listar moedas",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "const body = pm.response.json();",
+              "pm.test('Retorna um array de moedas', () => pm.expect(body).to.be.an('array').that.is.not.empty);",
+              "pm.test('Cada moeda tem iso_code e name', () => {",
+              "  pm.expect(body[0]).to.have.property('iso_code');",
+              "  pm.expect(body[0]).to.have.property('name');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/currencies",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "currencies"
+          ]
+        },
+        "description": "Usado em useCurrencies() para preencher os seletores de moeda."
+      },
+      "response": []
+    },
+    {
+      "name": "Cotação atual de um par",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "const body = pm.response.json();",
+              "pm.test('Tem date, base, quote e rate', () => {",
+              "  pm.expect(body).to.include.keys('date', 'base', 'quote', 'rate');",
+              "});",
+              "pm.test('rate é um número positivo', () => pm.expect(body.rate).to.be.a('number').above(0));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rate/{{base}}/{{quote}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rate",
+            "{{base}}",
+            "{{quote}}"
+          ]
+        },
+        "description": "Usado em getLatestRate() pelo Conversor."
+      },
+      "response": []
+    },
+    {
+      "name": "Histórico (série temporal)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "const body = pm.response.json();",
+              "pm.test('Retorna um array de cotações diárias', () => pm.expect(body).to.be.an('array').that.is.not.empty);",
+              "pm.test('Cada item tem date e rate', () => pm.expect(body[0]).to.include.keys('date', 'rate'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rates?base={{base}}&quotes={{quote}}&from={{startDate}}&to={{endDate}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rates"
+          ],
+          "query": [
+            {
+              "key": "base",
+              "value": "{{base}}"
+            },
+            {
+              "key": "quotes",
+              "value": "{{quote}}"
+            },
+            {
+              "key": "from",
+              "value": "{{startDate}}"
+            },
+            {
+              "key": "to",
+              "value": "{{endDate}}"
+            }
+          ]
+        },
+        "description": "Usado em getHistoricalRates() pelo Gráfico, pela Tabela e pelos cards do Mercado."
+      },
+      "response": []
+    },
+    {
+      "name": "Cotações mais recentes (todas as moedas)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status 200', () => pm.response.to.have.status(200));",
+              "pm.test('Retorna um array', () => pm.expect(pm.response.json()).to.be.an('array'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rates?base={{base}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rates"
+          ],
+          "query": [
+            {
+              "key": "base",
+              "value": "{{base}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Erro — moeda inválida",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status de erro (4xx)', () => pm.expect(pm.response.code).to.be.within(400, 499));",
+              "pm.test('Retorna mensagem de erro', () => pm.expect(pm.response.json()).to.have.property('message'));"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/rate/abc/{{quote}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "rate",
+            "abc",
+            "{{quote}}"
+          ]
+        },
+        "description": "Valida o tratamento de erro que o app exibe ao usuário (apiFetch)."
+      },
+      "response": []
+    }
+  ]
+}

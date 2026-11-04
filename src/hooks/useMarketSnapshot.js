@@ -50,3 +50,4 @@ export function useMarketSnapshot(base) {
 
   return { cards, loading, error };
 }
+

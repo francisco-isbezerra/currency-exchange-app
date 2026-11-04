@@ -13,15 +13,15 @@ const TABLE_RANGES = ['7d', '15d', '30d', '3m', '6m', '1y'];
 
 export default function RateTable({ currencies }) {
   const { t, locale, dir } = useI18n();
-  const [from, setFrom]       = useState('USD');
-  const [to, setTo]           = useState('EUR');
-  const [range, setRange]     = useState('30d');
-  const [search, setSearch]   = useState('');
+  const [from, setFrom] = useState('USD');
+  const [to, setTo] = useState('EUR');
+  const [range, setRange] = useState('30d');
+  const [search, setSearch] = useState('');
   const [minRate, setMinRate] = useState('');
   const [maxRate, setMaxRate] = useState('');
   const [sortField, setSortField] = useState('date');
-  const [sortDir, setSortDir]     = useState('desc');
-  const [page, setPage]       = useState(1);
+  const [sortDir, setSortDir] = useState('desc');
+  const [page, setPage] = useState(1);
 
   const { data, loading, error } = useHistoricalRates(from, to, range);
 
@@ -92,7 +92,7 @@ export default function RateTable({ currencies }) {
         {/* Moedas e período */}
         <div className="grid gap-3 md:grid-cols-[1fr_1fr_10rem]">
           <CurrencySelect id="table-from" label={t('conv.from')} value={from} onChange={resetting(setFrom)} currencies={currencies} />
-          <CurrencySelect id="table-to"   label={t('conv.to')}   value={to}   onChange={resetting(setTo)}   currencies={currencies} />
+          <CurrencySelect id="table-to" label={t('conv.to')} value={to} onChange={resetting(setTo)} currencies={currencies} />
           <div>
             <label htmlFor="table-range" className="label">{t('chart.period')}</label>
             <select id="table-range" className="field font-mono text-sm" value={range} onChange={e => resetting(setRange)(e.target.value)}>

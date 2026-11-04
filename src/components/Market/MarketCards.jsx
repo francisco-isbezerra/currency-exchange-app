@@ -56,3 +56,4 @@ export default function MarketCards({ cards, base, selected, onSelect }) {
     </div>
   );
 }
+
